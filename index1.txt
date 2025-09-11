@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PSY 121-01: General Psychology Syllabus</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .tab-active {
+            border-bottom-color: #4f46e5;
+            color: #4f46e5;
+            font-weight: 600;
+        }
+        .tab-inactive {
+            border-bottom-color: transparent;
+            color: #6b7280;
+        }
+        .section {
+            display: none;
+        }
+        .section-active {
+            display: block;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0.5rem;
+        }
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 2rem;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 700px;
+            border-radius: 0.75rem;
+            position: relative;
+        }
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4f46e5;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 1rem auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* Chat Styles */
+        .chat-container {
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            background-color: #f9fafb;
+        }
+        .chat-bubble {
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            margin-bottom: 0.5rem;
+            max-width: 80%;
+        }
+        .user-bubble {
+            background-color: #e0e7ff;
+            color: #3730a3;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+        .ai-bubble {
+            background-color: #f3f4f6;
+            color: #374151;
+            align-self: flex-start;
+        }
+        /* Quiz Styles */
+        .quiz-option {
+            display: block;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .quiz-option:hover {
+            background-color: #f3f4f6;
+        }
+        .quiz-option.selected {
+            background-color: #e0e7ff;
+            border-color: #4f46e5;
+        }
+        .quiz-option.correct {
+            background-color: #d1fae5;
+            border-color: #059669;
+        }
+        .quiz-option.incorrect {
+            background-color: #fee2e2;
+            border-color: #dc2626;
+        }
+         /* AI Output Styling */
+        #target-output h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #4f46e5;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.25rem;
+            border-bottom: 2px solid #e0e7ff;
+        }
+         #target-output ul {
+            list-style-type: disc;
+            padding-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8">
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-indigo-700">General Psychology</h1>
+            <p class="text-xl text-gray-600 mt-2">PSY 121-01 | Fall 2025</p>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="flex flex-wrap justify-center border-b border-gray-200 mb-8">
+            <button class="py-4 px-6 text-sm md:text-base border-b-2 tab-active" onclick="showSection('home', event)">Home</button>
+            <button class="py-4 px-6 text-sm md:text-base border-b-2 tab-inactive" onclick="showSection('schedule', event)">Schedule</button>
+            <button class="py-4 px-6 text-sm md:text-base border-b-2 tab-inactive" onclick="showSection('grading', event)">Grading</button>
+            <button class="py-4 px-6 text-sm md:text-base border-b-2 tab-inactive" onclick="showSection('calculator', event)">Grade Calculator</button>
+            <button class="py-4 px-6 text-sm md:text-base border-b-2 tab-inactive" onclick="showSection('policies', event)">Policies</button>
+            <button class="py-4 px-6 text-sm md:text-base border-b-2 tab-inactive" onclick="showSection('resources', event)">Resources</button>
+            <button class="py-4 px-6 text-sm md:text-base border-b-2 tab-inactive" onclick="showSection('ai-tools', event)">✨ AI Tools</button>
+        </nav>
+
+        <!-- Main Content -->
+        <main>
+            <!-- Home Section -->
+            <div id="home" class="section section-active">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="md:col-span-2">
+                        <div class="card">
+                            <h2 class="card-title">Course Description</h2>
+                            <p class="text-gray-700 leading-relaxed">This course is a survey of psychology—we will cover a variety of topics in psychology, such as the brain and nervous system, sensory and perceptual processes, learning, cognition, human development, personality, and psychopathology. We will also discuss the scientific approaches psychologists use to study these topics.</p>
+                        </div>
+                        <div class="card">
+                            <h2 class="card-title">Student Learning Outcomes</h2>
+                            <ul class="list-disc list-inside text-gray-700 space-y-2">
+                                <li>Define and describe the major concepts and theories in psychology and articulate what psychologists do.</li>
+                                <li>Understand basic research methods and why psychology is a science.</li>
+                                <li>Describe how psychological concepts can explain everyday situations.</li>
+                                <li>Apply psychological concepts to their own life and experiences.</li>
+                                <li>Critically analyze claims, arguments, artifacts, or information (MAC SLO 1).</li>
+                                <li>Construct coherent, evidence-based arguments (MAC SLO 2).</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="md:col-span-1">
+                        <div class="card">
+                            <h2 class="card-title">Instructor Information</h2>
+                            <div class="space-y-3">
+                                <p><strong>Instructor:</strong> Bridget Smeekens</p>
+                                <p><strong>Email:</strong> basmeeke@uncg.edu</p>
+                                <p><strong>Office:</strong> Eberhart 285 or via Teams</p>
+                                <p><strong>Office Hours:</strong> M 2-3:15pm, T 10-11:30am (virtual), W 2-3:15pm</p>
+                                <p><strong>Class:</strong> TR 8:00 – 9:15AM, Eberhart 250</p>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h2 class="card-title">Required Textbook</h2>
+                            <p class="text-gray-700">
+                                General Psychology - R. Biswas-Diener & E. Diener (Eds), Noba Textbook Series.
+                            </p>
+                            <a href="http://noba.to/qzt85gyj" target="_blank" class="text-indigo-600 hover:underline mt-2 inline-block">Free Online Version</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Schedule Section -->
+            <div id="schedule" class="section">
+                <div class="card">
+                    <div class="flex justify-between items-center flex-wrap gap-4">
+                        <h2 class="card-title mb-0 border-b-0 pb-0">Course Schedule</h2>
+                        <button onclick="exportCalendar()" class="bg-indigo-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-indigo-700 transition-colors text-sm">
+                            Export Calendar (.ics)
+                        </button>
+                    </div>
+                     <p class="text-sm text-gray-500 my-4">*This schedule is tentative and subject to change. The Canvas schedule will serve as the Official Schedule.</p>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-gray-100">
+                                <tr>
+                                    <th class="p-3 font-semibold">Date</th>
+                                    <th class="p-3 font-semibold">Topic</th>
+                                    <th class="p-3 font-semibold">Readings</th>
+                                    <th class="p-3 font-semibold">Study Aid</th>
+                                </tr>
+                            </thead>
+                            <tbody id="schedule-body" class="divide-y divide-gray-200">
+                                <!-- Schedule will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grading Section -->
+            <div id="grading" class="section">
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="card">
+                        <h2 class="card-title">Grading Breakdown</h2>
+                        <ul class="space-y-3 text-gray-700">
+                            <li><strong>Exams (4):</strong> 60%</li>
+                            <li><strong>Research Requirement:</strong> 15%</li>
+                            <li><strong>Discussion Posts (Packback):</strong> 15%</li>
+                            <li><strong>Reading Quizzes:</strong> 10%</li>
+                        </ul>
+                        <p class="text-sm text-red-600 mt-4"><strong>Note:</strong> Do not go by the grade calculations on Canvas. Your lowest exam will be dropped.</p>
+                    </div>
+                    <div class="card">
+                        <h2 class="card-title">Grading Scale</h2>
+                        <div class="grid grid-cols-2 gap-x-8 gap-y-2 text-sm">
+                            <p><strong>A:</strong> 93-100</p><p><strong>C:</strong> 73-76</p>
+                            <p><strong>A-:</strong> 90-92</p><p><strong>C-:</strong> 70-72</p>
+                            <p><strong>B+:</strong> 87-89</p><p><strong>D+:</strong> 67-69</p>
+                            <p><strong>B:</strong> 83-86</p><p><strong>D:</strong> 63-66</p>
+                            <p><strong>B-:</strong> 80-82</p><p><strong>D-:</strong> 60-62</p>
+                            <p><strong>C+:</strong> 77-79</p><p><strong>F:</strong> 59 or below</p>
+                        </div>
+                         <p class="text-xs text-gray-500 mt-3">Note: Grades are rounded to the nearest whole number (e.g., 92.5% rounds to 93%).</p>
+                    </div>
+                </div>
+                 <div class="card">
+                    <h2 class="card-title">Assignment Details</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <h3 class="font-semibold">Exams (60%)</h3>
+                            <p class="text-gray-700">There will be 4 unit exams and 1 cumulative final. You may drop the lowest of your exams. The 4 remaining grades will each count for 15% of your final grade. The cumulative final is optional and can replace your lowest unit exam grade. If your cumulative final grade is lower than the unit exam you hoped to replace, it will not be counted.</p>
+                        </div>
+                         <div>
+                            <h3 class="font-semibold">Exam Extra Credit (Retakes)</h3>
+                            <p class="text-gray-700">In the class after an exam, you can re-take it for extra credit. If your score improves, your original score will be increased by `retake_score / 10`. For example, a 90% on the retake adds 9 points to your original score. You can improve your score by a maximum of 10 points.</p>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold">Research Requirement (15%)</h3>
+                            <p class="text-gray-700">Choose between participating in research studies (7.5 hours) or writing a 10-page research paper. Due by December 4th.</p>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold">Discussion Posts (15%)</h3>
+                            <p class="text-gray-700">Assignments will be on Packback, due the night before the corresponding exam. Your lowest score will be dropped.</p>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold">Reading Quizzes (10%)</h3>
+                            <p class="text-gray-700">Short, open-note quizzes on Canvas for each reading module, due at 11:59pm the day before we cover the module. Your lowest quiz score is dropped.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Grade Calculator Section -->
+            <div id="calculator" class="section">
+                <div class="card max-w-3xl mx-auto">
+                    <h2 class="card-title">Grade Estimate Calculator</h2>
+                    <p class="text-gray-600 mb-2">Enter your scores for completed assignments to estimate your current grade. This tool applies the syllabus weighting and drops your lowest scores for exams, quizzes, and discussions.</p>
+                    <p class="text-gray-600 mb-6">Blank fields will be ignored in the calculation.</p>
+                    
+                    <h3 class="font-semibold mb-2 text-lg">Exams (60%)</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4 border-b pb-4">
+                        <div><label class="block text-sm font-medium text-gray-700">Exam 1</label><input type="number" id="exam-1" placeholder="%" class="mt-1 w-full p-2 border rounded-md"></div>
+                        <div><label class="block text-sm font-medium text-gray-700">Exam 1 Retake</label><input type="number" id="retake-1" placeholder="Retake %" class="mt-1 w-full p-2 border rounded-md"></div>
+                        <div><label class="block text-sm font-medium text-gray-700">Exam 2</label><input type="number" id="exam-2" placeholder="%" class="mt-1 w-full p-2 border rounded-md"></div>
+                        <div><label class="block text-sm font-medium text-gray-700">Exam 2 Retake</label><input type="number" id="retake-2" placeholder="Retake %" class="mt-1 w-full p-2 border rounded-md"></div>
+                        <div><label class="block text-sm font-medium text-gray-700">Exam 3</label><input type="number" id="exam-3" placeholder="%" class="mt-1 w-full p-2 border rounded-md"></div>
+                        <div><label class="block text-sm font-medium text-gray-700">Exam 3 Retake</label><input type="number" id="retake-3" placeholder="Retake %" class="mt-1 w-full p-2 border rounded-md"></div>
+                        <div><label class="block text-sm font-medium text-gray-700">Exam 4</label><input type="number" id="exam-4" placeholder="%" class="mt-1 w-full p-2 border rounded-md"></div>
+                        <div><label class="block text-sm font-medium text-gray-700">Exam 4 Retake</label><input type="number" id="retake-4" placeholder="Retake %" class="mt-1 w-full p-2 border rounded-md"></div>
+                        <div class="col-span-2 md:col-span-4"><label class="block text-sm font-medium text-gray-700">Optional Final Exam</label><input type="number" id="final-exam" placeholder="%" class="mt-1 w-full p-2 border rounded-md"></div>
+                    </div>
+
+                    <h3 class="font-semibold mb-2 text-lg">Other Grades</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Reading Quiz Scores (10%)</label>
+                            <input type="text" id="quiz-scores" placeholder="Comma-separated, e.g., 100, 80" class="mt-1 block w-full p-2 border rounded-md">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Research Req. (15%)</label>
+                            <input type="number" id="research-score" placeholder="e.g., 95" class="mt-1 block w-full p-2 border rounded-md">
+                        </div>
+                    </div>
+                     <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700">Discussion Post Scores (15%)</label>
+                        <input type="text" id="discussion-scores" placeholder="Comma-separated, e.g., 100, 90" class="mt-1 block w-full p-2 border rounded-md">
+                    </div>
+
+                    <button onclick="calculateGrade()" class="w-full mt-6 bg-indigo-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-indigo-700 transition-colors">Calculate Grade Estimate</button>
+                    <div id="grade-output" class="mt-6 text-center" style="display: none;">
+                        <p class="text-lg">Your estimated current grade is:</p>
+                        <p id="calculated-grade" class="text-4xl font-bold text-indigo-700"></p>
+                    </div>
+                </div>
+                <div class="card max-w-3xl mx-auto">
+                    <h2 class="card-title">✨ AI Target Grade Calculator</h2>
+                    <p class="text-gray-600 mb-4">Use your current grades from above to see what you need on a future assignment to reach a desired overall grade in the course.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="target-grade" class="block text-sm font-medium text-gray-700">Desired Final Grade (%)</label>
+                            <input type="number" id="target-grade" placeholder="e.g., 90" class="mt-1 block w-full p-2 border rounded-md">
+                        </div>
+                        <div>
+                             <label for="target-assignment" class="block text-sm font-medium text-gray-700">Assignment to Calculate</label>
+                            <select id="target-assignment" class="mt-1 block w-full p-2 border rounded-md">
+                                <option value="the next exam">Next Exam</option>
+                                <option value="the research requirement">Research Requirement</option>
+                                <option value="the final exam">Final Exam</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button onclick="calculateNeededGradeAI()" class="w-full mt-4 bg-indigo-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-indigo-700 transition-colors">Calculate Required Grade</button>
+                    <div id="target-loader" class="loader" style="display: none;"></div>
+                    <div id="target-output" class="mt-4 p-4 bg-gray-50 rounded-md border border-gray-200" style="display: none;"></div>
+                </div>
+            </div>
+
+            <!-- Policies Section -->
+            <div id="policies" class="section">
+                <div class="card">
+                    <h2 class="card-title">Course Policies</h2>
+                    <div class="space-y-6">
+                        <div><h3 class="font-semibold text-lg">Attendance and Participation</h3><p>Class attendance is required. Students are permitted 3 unexcused absences without penalty. For each additional absence, final grades will be reduced by 1 level (i.e., if you earned a B and had 4 unexcused absences, your final grade would be a B-). Arriving late or leaving early three times is equivalent to one absence.</p></div>
+                        <div><h3 class="font-semibold text-lg">Technology Use</h3><p>Laptops are permitted for note-taking purposes only. Cell phone use is not permitted. Laptops are required for Exams and Exam Re-takes.</p></div>
+                        <div><h3 class="font-semibold text-lg">Academic Integrity</h3><p>All work must adhere to UNCG's academic integrity policy. Violations (cheating, plagiarism, use of AI on exams, etc.) will be reported to the Dean of Students Office.</p></div>
+                        <div><h3 class="font-semibold text-lg">Email Etiquette</h3><p>Check the syllabus and Canvas before emailing. Emails must include "PSY 121-01" in the subject, a proper greeting, your full name, and use correct grammar. Allow up to 48 hours for a response on weekdays.</p></div>
+                        <div><h3 class="font-semibold text-lg">Dropping/Withdrawal</h3><p>The last date to drop this course without incurring a WF grade is Friday, October 10th.</p></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resources Section -->
+            <div id="resources" class="section">
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="card"><h2 class="card-title">Academic Support</h2><ul class="list-disc list-inside space-y-2"><li><a href="https://oars.uncg.edu/" target="_blank" class="text-indigo-600 hover:underline">Office of Accessibility Resources and Services (OARS)</a></li><li><a href="https://success.uncg.edu/departments/aac/aac-tutoring/" target="_blank" class="text-indigo-600 hover:underline">Tutoring Services</a></li><li><a href="https://www.uncg.edu/academics-support/academic-support/tutoring-academic-support-services/" target="_blank" class="text-indigo-600 hover:underline">Learning Strategies Tutoring</a></li><li><a href="https://success.uncg.edu/" target="_blank" class="text-indigo-600 hover:underline">Division of Student Success</a></li></ul></div>
+                    <div class="card"><h2 class="card-title">Psychological & Crisis Help</h2><ul class="list-disc list-inside space-y-2"><li><strong>UNCG Counseling and Testing Center:</strong> 336-334-5874</li><li><strong>UNCG Psychology Clinic:</strong> 336-334-5662</li><li><strong>National Suicide Prevention Lifeline:</strong> 800-273-TALK (8255)</li><li><strong>Crisis Text Line:</strong> Text 741–741</li></ul></div>
+                </div>
+            </div>
+            
+            <!-- AI Tools Section -->
+            <div id="ai-tools" class="section">
+                <div class="card" style="display: none;">
+                    <h2 class="card-title">✨ AI Concept Explainer</h2>
+                    <p class="text-gray-600 mb-4">Enter a concept from the course, and the AI will provide a simple explanation based on your syllabus.</p>
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <input type="text" id="concept-input" placeholder="e.g., Frequency Distribution" class="flex-grow p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                        <button onclick="explainConcept()" class="bg-indigo-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-indigo-700 transition-colors">Explain Concept</button>
+                    </div>
+                    <div id="explanation-loader" class="loader" style="display: none;"></div>
+                    <div id="explanation-output" class="mt-4 p-4 bg-gray-50 rounded-md border border-gray-200" style="display: none;"></div>
+                    <button id="scenario-button" onclick="generateScenario()" class="hidden mt-4 bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-md hover:bg-gray-300 transition-colors w-full">Apply the Concept: Generate a Scenario</button>
+                    <div id="scenario-loader" class="loader" style="display: none;"></div>
+                    <div id="scenario-output" class="mt-4 p-4 bg-gray-50 rounded-md border border-gray-200" style="display: none;"></div>
+                </div>
+                <div class="card">
+                    <h2 class="card-title">✨ AI Practice Quiz Generator</h2>
+                    <p class="text-gray-600 mb-4">Select a unit to generate a short practice quiz based on the course materials.</p>
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <select id="quiz-exam-select" class="flex-grow p-2 border border-gray-300 rounded-md">
+                            <option value="1">Topics for Exam 1</option>
+                            <option value="2">Topics for Exam 2</option>
+                            <option value="3">Topics for Exam 3</option>
+                            <option value="4">Topics for Exam 4</option>
+                        </select>
+                        <button onclick="generateQuiz()" class="bg-indigo-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-indigo-700 transition-colors">Generate Quiz</button>
+                    </div>
+                    <div id="quiz-loader" class="loader" style="display: none;"></div>
+                    <div id="quiz-output" class="mt-4" style="display: none;"></div>
+                </div>
+                 <div class="card">
+                    <h2 class="card-title">✨ AI Study Scheduler</h2>
+                    <p class="text-gray-600 mb-4">Select an exam and enter your availability to generate a custom study plan.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="exam-select" class="block text-sm font-medium text-gray-700">Which exam are you studying for?</label>
+                            <select id="exam-select" class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
+                                <option value="1">Exam 1</option>
+                                <option value="2">Exam 2</option>
+                                <option value="3">Exam 3</option>
+                                <option value="4">Exam 4</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="study-times" class="block text-sm font-medium text-gray-700">When are you free to study?</label>
+                            <input type="text" id="study-times" placeholder="e.g., Mon 6-8pm, Wed 7-9pm, Sat 1-4pm" class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
+                        </div>
+                    </div>
+                    <button onclick="generateStudyPlan()" class="w-full mt-4 bg-indigo-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-indigo-700 transition-colors">Generate Study Plan</button>
+                    <div id="plan-loader" class="loader" style="display: none;"></div>
+                    <div id="plan-output" class="mt-4 p-4 bg-gray-50 rounded-md border border-gray-200" style="display: none;"></div>
+                </div>
+                 <div class="card">
+                    <h2 class="card-title">✨ AI Study Group Helper</h2>
+                    <p class="text-gray-600 mb-4">Enter a topic to get discussion questions and activities for your study group.</p>
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <input type="text" id="group-topic-input" placeholder="e.g., Sensation & Perception" class="flex-grow p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                        <button onclick="generateStudyGroupHelp()" class="bg-indigo-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-indigo-700 transition-colors">Get Help</button>
+                    </div>
+                    <div id="group-help-loader" class="loader" style="display: none;"></div>
+                    <div id="group-help-output" class="mt-4 p-4 bg-gray-50 rounded-md border border-gray-200" style="display: none;"></div>
+                </div>
+                <div class="card">
+                    <h2 class="card-title">✨ Syllabus Q&A</h2>
+                    <p class="text-gray-600 mb-4">Ask a question about the syllabus, and the AI will find the answer for you.</p>
+                    <div id="chat-window" class="chat-container mb-4 flex flex-col">
+                        <!-- Chat messages will appear here -->
+                    </div>
+                    <div class="flex gap-2">
+                        <input type="text" id="syllabus-q-input" placeholder="e.g., How many absences are allowed?" class="flex-grow p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                        <button onclick="askSyllabus()" class="bg-indigo-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-indigo-700 transition-colors">Ask</button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Modal for Study Guide -->
+    <div id="study-guide-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal()">&times;</span>
+            <h2 id="modal-title" class="text-2xl font-bold mb-4">Study Guide</h2>
+            <div id="modal-loader" class="loader"></div>
+            <div id="modal-body" class="text-gray-700 leading-relaxed max-h-[60vh] overflow-y-auto"></div>
+        </div>
+    </div>
+
+    <script>
+        // --- Navigation ---
+        function showSection(sectionId, event) {
+            document.querySelectorAll('.section').forEach(section => section.classList.remove('section-active'));
+            document.getElementById(sectionId).classList.add('section-active');
+
+            document.querySelectorAll('nav button').forEach(tab => {
+                tab.classList.remove('tab-active');
+                tab.classList.add('tab-inactive');
+            });
+            event.target.classList.add('tab-active');
+            event.target.classList.remove('tab-inactive');
+        }
+
+        // --- Schedule Data and Population ---
+        const scheduleData = [
+            { date: "T 08/19", topic: "Syllabus, Introduction", readings: "" },
+            { date: "R 08/21", topic: "How to Study", readings: "" },
+            { date: "T 08/26", topic: "What is Psychology?; Research Methods", readings: "1, 2" },
+            { date: "R 08/28", topic: "Research Methods (cont.)", readings: "3, 4, 5" },
+            { date: "T 09/02", topic: "The Brain & Nervous System", readings: "6" },
+            { date: "R 09/04", topic: "EXAM 1", readings: "PB01" },
+            { date: "T 09/09", topic: "EXAM 1 RE-TAKE EXTRA CREDIT", readings: "" },
+            { date: "R 09/11", topic: "Sensation & Perception", readings: "7" },
+            { date: "T 09/16", topic: "Attention & Consciousness", readings: "8, 9" },
+            { date: "R 09/18", topic: "Conditioning & Learning", readings: "10, 11" },
+            { date: "T 09/23", topic: "Memory", readings: "12" },
+            { date: "R 09/25", topic: "Intelligence & Creativity", readings: "13, 14" },
+            { date: "T 09/30", topic: "EXAM 2", readings: "PB02" },
+            { date: "R 10/02", topic: "EXAM 2 RE-TAKE EXTRA CREDIT", readings: "" },
+            { date: "T 10/07", topic: "Cognitive Development in Childhood", readings: "15" },
+            { date: "R 10/09", topic: "Social Development in Childhood", readings: "16" },
+            { date: "T 10/14", topic: "Fall Break – No Class", readings: "" },
+            { date: "R 10/16", topic: "Adolescence and Emerging Adulthood", readings: "17" },
+            { date: "T 10/21", topic: "Aging", readings: "18" },
+            { date: "R 10/23", topic: "Self & Identity; Conformity & Obedience", readings: "19, 20" },
+            { date: "T 10/28", topic: "EXAM 3", readings: "PB03" },
+            { date: "R 10/30", topic: "EXAM 3 RE-TAKE EXTRA CREDIT", readings: "" },
+            { date: "T 11/04", topic: "Social Cognition & Attitudes; Prejudice", readings: "22, 23" },
+            { date: "R 11/06", topic: "Personality Traits", readings: "25" },
+            { date: "T 11/11", topic: "Mood Disorders & Anxiety Disorders", readings: "28, 29" },
+            { date: "R 11/13", topic: "Schizophrenia Spectrum Disorders", readings: "30" },
+            { date: "T 11/18", topic: "Personality Disorders", readings: "31" },
+            { date: "R 11/20", topic: "Misc. Disorders", readings: "" },
+            { date: "T 11/25", topic: "EXAM 4", readings: "PB04" },
+            { date: "R 11/27", topic: "Thanksgiving Breaks – No Class", readings: "" },
+            { date: "T 12/02", topic: "EXAM 4 RE-TAKE EXTRA CREDIT", readings: "" },
+            { date: "R 12/04", topic: "Reading Day – No Class", readings: "" },
+            { date: "T 12/09", topic: "OPTIONAL FINAL 8:00-11:00am", readings: "" }
+        ];
+
+        function populateSchedule() {
+            const scheduleBody = document.getElementById('schedule-body');
+            let unitTopics = [];
+            let examCounter = 0;
+
+            scheduleData.forEach(item => {
+                const row = document.createElement('tr');
+                let studyAidCell = '<td></td>';
+
+                if (item.topic.toLowerCase().includes('exam') && !item.topic.toLowerCase().includes('re-take')) {
+                    examCounter++;
+                    row.classList.add('bg-yellow-50', 'font-semibold');
+                    const topicsForGuide = [...unitTopics];
+                    const escapedTopics = JSON.stringify(topicsForGuide).replace(/'/g, "\\'");
+                    studyAidCell = `<td><button onclick='generateStudyGuide(${examCounter}, ${escapedTopics})' class="bg-indigo-100 text-indigo-700 text-xs font-semibold py-1 px-2 rounded-full hover:bg-indigo-200">✨ Generate Study Guide</button></td>`;
+                    unitTopics = []; 
+                } else if (!item.topic.toLowerCase().includes('no class') && !item.topic.toLowerCase().includes('re-take') && !item.topic.toLowerCase().includes('exam') && item.topic) {
+                    unitTopics.push(item.topic.split(';')[0].trim());
+                }
+
+                if (item.topic.toLowerCase().includes('no class') || item.topic.toLowerCase().includes('final')) {
+                     row.classList.add('bg-gray-100', 'font-semibold');
+                }
+
+                row.innerHTML = `<td class="p-3">${item.date}</td><td class="p-3">${item.topic}</td><td class="p-3">${item.readings}</td>${studyAidCell}`;
+                scheduleBody.appendChild(row);
+            });
+        }
+        
+        // --- Modal Control ---
+        const modal = document.getElementById('study-guide-modal');
+        function openModal() { modal.style.display = 'block'; }
+        function closeModal() { modal.style.display = 'none'; }
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+
+        // --- Gemini API Functions ---
+        const apiKey = ""; // API Key is handled by the environment
+        
+        const syllabusText = `
+            GENERAL PSYCHOLOGY (PSY 121-01) Fall 2025. TR 8:00 – 9:15AM.
+            Instructor: Bridget Smeekens, Email: basmeeke@uncg.edu, Office: Eberhart 285 or via Teams, Office Hours: M 2-3:15pm, T 10-11:30am (virtual only), W 2-3:15pm.
+            Required Textbook: General Psychology - R. Biswas-Diener & E. Diener (Eds), Noba Textbook Series. It is a free online textbook.
+            Course Description: A survey of psychology, covering topics like the brain, nervous system, sensation, perception, learning, cognition, human development, personality, and psychopathology.
+            Student Learning Outcomes: Students will be able to define psychological concepts, understand research methods, explain everyday situations with psychology, apply concepts to their own lives, critically analyze claims, and construct evidence-based arguments.
+            Course Policies:
+            - Attendance: Required. 3 unexcused absences permitted. Each additional absence reduces the final grade by one level (e.g., B to B-). Three late arrivals or early departures equal one absence.
+            - Technology Use: Laptops for note-taking only. No cell phone use. Laptops are required for Exams and Exam Re-takes.
+            - Academic Integrity: All students are expected to follow the principles of academic integrity. Violations include cheating, plagiarism, misuse of academic resources, falsifying information, and facilitating academic dishonesty of others. Using AI to write your research paper or on an exam is a violation.
+            - Dropping/Withdrawal: Last day to drop without a WF grade is Friday, October 10th.
+            Assignments and Grading:
+            - Research Requirement (15%): Due by December 4th. Choose between two options: 1) participate in psychology research studies to earn 15 research credits (7.5 hours), or 2) write a 10-page paper on some articles related to course material.
+            - Reading Quizzes (10%): Short, open-note quizzes on Canvas. Due at 11:59pm the day before we cover that module. Lowest quiz score is dropped.
+            - Discussion Posts (15%): Packback assignments due the night before the corresponding exam. Lowest score is dropped.
+            - Exams (60%): 4 unit exams and 1 optional cumulative final. The lowest of your exams will be dropped. The 4 remaining exam grades will each count for 15% of your final grade.
+            - Cumulative Final: The cumulative final is on Tuesday, December 9, 8:00-11:00am. It is not required but it can replace your lowest unit exam grade. If your cumulative final grade ends up being lower than the unit exam grade you were hoping to replace, the cumulative final grade will not be counted.
+            - Exam Extra Credit (Re-takes): In the next class meeting after the exam, you can re-take the exam. If your score goes up on the re-take, I will take your re-take percent correct (e.g., 90%), divide it by 10 (e.g., 9), and add it to your original exam score. You can improve your score by a max of 10 points. You must take the initial exam to take the re-take. No re-take for the final exam.
+            - Make-up exams: Only for university-approved excused absences with documentation. Must be scheduled within 48 hours and taken within one week.
+            Grading Scale: A: 93-100, A-: 90-92, B+: 87-89, B: 83-86, B-: 80-82, C+: 77-79, C: 73-76, C-: 70-72, D+: 67-69, D: 63-66, D-: 60-62, F: 59 or below.
+        `;
+
+        const courseMaterialText = syllabusText;
+
+        async function callGemini(prompt) {
+            if (!apiKey && typeof __apiKey === 'undefined') {
+                throw new Error("API key is not configured");
+            }
+            const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
+            const payload = { contents: chatHistory };
+            const effectiveApiKey = typeof __apiKey !== 'undefined' ? __apiKey : apiKey;
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${effectiveApiKey}`;
+            
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API request failed with status ${response.status}`);
+                }
+                
+                const result = await response.json();
+                
+                if (result.candidates && result.candidates.length > 0 && result.candidates[0].content.parts[0].text) {
+                    return result.candidates[0].content.parts[0].text;
+                } else {
+                    console.error("Gemini API response is missing expected content:", result);
+                    return null;
+                }
+            } catch (error) {
+                console.error("Error calling Gemini API:", error);
+                throw error;
+            }
+        }
+        
+        async function callGeminiWithSchema(prompt, schema) {
+            const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
+            const payload = {
+              contents: chatHistory,
+              generationConfig: {
+                responseMimeType: "application/json",
+                responseSchema: schema,
+              }
+            };
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API request failed with status ${response.status}`);
+                }
+
+                const result = await response.json();
+                
+                if (result.candidates && result.candidates.length > 0 && result.candidates[0].content.parts[0].text) {
+                    return JSON.parse(result.candidates[0].content.parts[0].text);
+                } else {
+                    console.error("Gemini API response is missing expected content:", result);
+                    return null;
+                }
+            } catch (error) {
+                console.error("Error calling Gemini API with schema:", error);
+                throw error;
+            }
+        }
+
+        // --- Grade Calculation Functions ---
+
+        function getLetterGrade(score) {
+            score = Math.round(score);
+            if (score >= 93) return 'A';
+            if (score >= 90) return 'A-';
+            if (score >= 87) return 'B+';
+            if (score >= 83) return 'B';
+            if (score >= 80) return 'B-';
+            if (score >= 77) return 'C+';
+            if (score >= 73) return 'C';
+            if (score >= 70) return 'C-';
+            if (score >= 67) return 'D+';
+            if (score >= 63) return 'D';
+            if (score >= 60) return 'D-';
+            return 'F';
+        }
+
+        function getGradeInputs(forAI = false) {
+            const parse = (id) => {
+                const val = document.getElementById(id).value;
+                if (val.trim() === '') return null;
+                const num = parseFloat(val);
+                return isNaN(num) ? null : num;
+            };
+
+            const unitExamScores = [];
+            const rawExamScores = { exams: [], retakes: [] };
+
+            for (let i = 1; i <= 4; i++) {
+                let examScore = parse(`exam-${i}`);
+                let retakeScore = parse(`retake-${i}`);
+                
+                if (forAI) {
+                    rawExamScores.exams.push(examScore);
+                    rawExamScores.retakes.push(retakeScore);
+                }
+
+                if (examScore !== null) {
+                    if (retakeScore !== null) {
+                        examScore += (retakeScore * 0.1);
+                    }
+                    unitExamScores.push(examScore);
+                } else {
+                    unitExamScores.push(null);
+                }
+            }
+
+            const finalExamScore = parse('final-exam');
+            const getScores = (id) => {
+                const input = document.getElementById(id).value;
+                return input ? input.split(',').map(s => parseFloat(s.trim())).filter(s => !isNaN(s)) : [];
+            };
+
+            const quizScores = getScores('quiz-scores');
+            const discussionScores = getScores('discussion-scores');
+            const researchScore = parse('research-score');
+
+            return { unitExamScores, finalExamScore, quizScores, discussionScores, researchScore, rawExamScores };
+        }
+
+        function calculateGrade() {
+            const { unitExamScores, finalExamScore, quizScores, discussionScores, researchScore } = getGradeInputs();
+            
+            let completedUnitExams = unitExamScores.filter(score => score !== null);
+            let examScoresForAvg = [...completedUnitExams];
+            
+            if (finalExamScore !== null) {
+                if (examScoresForAvg.length >= 4) {
+                    let minScore = Math.min(...examScoresForAvg);
+                    if (finalExamScore > minScore) {
+                        examScoresForAvg[examScoresForAvg.indexOf(minScore)] = finalExamScore;
+                    }
+                } else {
+                    examScoresForAvg.push(finalExamScore);
+                }
+            }
+            
+            if (examScoresForAvg.length >= 4) {
+                examScoresForAvg.sort((a, b) => a - b).shift();
+            }
+
+            let quizzesToAverage = [...quizScores];
+            if (quizzesToAverage.length > 1) quizzesToAverage.sort((a, b) => a - b).shift();
+
+            let discussionsToAverage = [...discussionScores];
+            if (discussionsToAverage.length > 1) discussionsToAverage.sort((a, b) => a - b).shift();
+
+            const avg = (arr) => arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
+
+            const examAvg = avg(examScoresForAvg);
+            const quizAvg = avg(quizzesToAverage);
+            const discussionAvg = avg(discussionsToAverage);
+
+            let totalWeighted = 0;
+            let totalWeight = 0;
+
+            if (completedUnitExams.length > 0 || finalExamScore !== null) { totalWeighted += examAvg * 0.60; totalWeight += 0.60; }
+            if (quizScores.length > 0) { totalWeighted += quizAvg * 0.10; totalWeight += 0.10; }
+            if (discussionScores.length > 0) { totalWeighted += discussionAvg * 0.15; totalWeight += 0.15; }
+            if (researchScore !== null) { totalWeighted += researchScore * 0.15; totalWeight += 0.15; }
+            
+            const finalGrade = totalWeight > 0 ? (totalWeighted / totalWeight).toFixed(2) : 0;
+            const letterGrade = getLetterGrade(finalGrade);
+            
+            document.getElementById('calculated-grade').textContent = `${finalGrade}% (${letterGrade})`;
+            document.getElementById('grade-output').style.display = 'block';
+        }
+
+        async function calculateNeededGradeAI() {
+            const desiredGrade = parseFloat(document.getElementById('target-grade').value);
+            if (isNaN(desiredGrade)) {
+                alert("Please enter your desired final grade.");
+                return;
+            }
+
+            const loader = document.getElementById('target-loader');
+            const output = document.getElementById('target-output');
+            loader.style.display = 'block';
+            output.style.display = 'none';
+
+            const { rawExamScores, finalExamScore, quizScores, discussionScores, researchScore } = getGradeInputs(true);
+            const targetAssignment = document.getElementById('target-assignment').value;
+
+            const prompt = `
+                You are a helpful and friendly AI grade calculator. A student wants to know what grade they need on a future assignment to achieve a target grade for the course.
+                
+                Here is the information you need:
+                
+                **Grading Rules from Syllabus:**
+                - Exams: 60% of total grade. There are 4 unit exams. The lowest of the 4 is dropped.
+                - Exam Retakes: If a retake is taken, the final score for that exam is calculated as: original_score + (retake_score * 0.1). For example, an 80 on the exam and a 90 on the retake results in a final score of 89. There is no 100% cap on grades.
+                - Optional Final Exam: Can replace the lowest unit exam score if it's higher.
+                - Research Requirement: 15% of total grade.
+                - Discussion Posts: 15% of total grade. The lowest score is dropped.
+                - Reading Quizzes: 10% of total grade. The lowest score is dropped.
+                - Grading Scale: A: 93-100, A-: 90-92, B+: 87-89, B: 83-86, B-: 80-82, C+: 77-79, C: 73-76, C-: 70-72, D+: 67-69, D: 63-66, D-: 60-62, F: 59 or below. Final percentages are rounded to the nearest whole number before assigning a letter grade (e.g., 92.5% rounds to 93% and is an A).
+                
+                **Student's Current Grades (null means not yet taken/entered):**
+                - Exam 1: ${rawExamScores.exams[0]}, Retake: ${rawExamScores.retakes[0]}
+                - Exam 2: ${rawExamScores.exams[1]}, Retake: ${rawExamScores.retakes[1]}
+                - Exam 3: ${rawExamScores.exams[2]}, Retake: ${rawExamScores.retakes[2]}
+                - Exam 4: ${rawExamScores.exams[3]}, Retake: ${rawExamScores.retakes[3]}
+                - Optional Final Exam: ${finalExamScore}
+                - Reading Quizzes: [${quizScores.join(', ')}]
+                - Discussion Posts: [${discussionScores.join(', ')}]
+                - Research Requirement: ${researchScore}
+                
+                **Student's Goal:**
+                - Desired Final Grade: ${desiredGrade}%
+                - They want to know the score needed on: ${targetAssignment}
+                
+                **Your Task:**
+                1.  Present the information in a clear, visually appealing, and sectioned format using clean HTML.
+                2.  **Structure your response with the following sections using <h4> tags for headings:**
+                    - **Your Goal:** Briefly state the student's target.
+                    - **Current Standing:** Summarize the grades entered.
+                    - **The Calculation:** Provide a step-by-step breakdown of the math. Explain how you're using the weights and dropped scores.
+                    - **The Verdict:** Clearly state the final required score in a concluding sentence.
+                3.  Use lists (<ul>, <li>) and bold text (<strong>) to make the calculation easy to follow.
+                4.  If the required score is very high (e.g., over 110%), explain that their goal might be difficult to achieve.
+                5.  If the calculation cannot be performed (e.g., the target assignment grade has already been entered), explain why.
+                6.  Do not include the \`\`\`html wrapper in your response.
+            `;
+
+            try {
+                const resultText = await callGemini(prompt);
+                output.innerHTML = resultText || '<p>Sorry, the calculation could not be performed at this time.</p>';
+            } catch (error) {
+                console.error("Error calling AI for grade calculation:", error);
+                output.innerHTML = `<p>An error occurred: ${error.message}</p>`;
+            } finally {
+                loader.style.display = 'none';
+                output.style.display = 'block';
+            }
+        }
+
+        // --- Other AI & Utility Functions ---
+
+        async function generateStudyGuide(examNumber, topics) {
+            openModal();
+            document.getElementById('modal-title').innerText = `✨ AI Study Guide for Exam ${examNumber}`;
+            const modalBody = document.getElementById('modal-body');
+            const modalLoader = document.getElementById('modal-loader');
+            modalBody.style.display = 'none';
+            modalLoader.style.display = 'block';
+
+            const prompt = `Generate a concise study guide for an introductory psychology course. The guide should cover the key concepts for the following topics: ${topics.join(', ')}. For each topic, provide a brief definition and highlight 2-3 most important points or sub-topics. Format the output in clean HTML with headings and lists.`;
+            
+            try {
+                const guideText = await callGemini(prompt);
+                modalBody.innerHTML = guideText || '<p>Sorry, the study guide could not be generated at this time.</p>';
+            } catch (error) {
+                console.error("Error generating study guide:", error);
+                modalBody.innerHTML = `<p>An error occurred. Please try again later. Details: ${error.message}</p>`;
+            } finally {
+                modalLoader.style.display = 'none';
+                modalBody.style.display = 'block';
+            }
+        }
+
+        let lastExplainedConcept = '';
+        async function explainConcept() {
+            const concept = document.getElementById('concept-input').value;
+            if (!concept) { return; }
+            lastExplainedConcept = concept;
+
+            const outputDiv = document.getElementById('explanation-output');
+            const loader = document.getElementById('explanation-loader');
+            const scenarioButton = document.getElementById('scenario-button');
+            const scenarioOutput = document.getElementById('scenario-output');
+            
+            outputDiv.style.display = 'none';
+            scenarioButton.style.display = 'none';
+            scenarioOutput.style.display = 'none';
+            loader.style.display = 'block';
+
+            const prompt = `You are a helpful course assistant. Based ONLY on the following course materials, explain the psychological concept "${concept}" in simple terms for an introductory psychology student. If the concept is not in the provided materials, state that. Here are the materials:\n\n${courseMaterialText}\n\nExplain "${concept}". Format as clean HTML.`;
+
+            try {
+                const explanationText = await callGemini(prompt);
+                outputDiv.innerHTML = explanationText || '<p>Sorry, the explanation could not be generated from the course materials.</p>';
+                if (explanationText && !explanationText.includes("not in the provided materials")) {
+                    scenarioButton.style.display = 'block';
+                }
+            } catch (error) {
+                console.error("Error explaining concept:", error);
+                outputDiv.innerHTML = `<p>An error occurred. Please try again later. Details: ${error.message}</p>`;
+            } finally {
+                loader.style.display = 'none';
+                outputDiv.style.display = 'block';
+            }
+        }
+        
+        async function generateScenario() {
+            if (!lastExplainedConcept) return;
+
+            const outputDiv = document.getElementById('scenario-output');
+            const loader = document.getElementById('scenario-loader');
+            outputDiv.style.display = 'none';
+            loader.style.display = 'block';
+
+            const prompt = `Based on the psychological concept "${lastExplainedConcept}", generate a short, real-world scenario. Then, ask a question that prompts the student to apply the concept to the scenario. Format as clean HTML.`;
+
+            try {
+                const scenarioText = await callGemini(prompt);
+                outputDiv.innerHTML = scenarioText || '<p>Could not generate a scenario.</p>';
+            } catch (error) {
+                console.error("Error generating scenario:", error);
+                outputDiv.innerHTML = `<p>An error occurred.</p>`;
+            } finally {
+                loader.style.display = 'none';
+                outputDiv.style.display = 'block';
+            }
+        }
+
+        async function askSyllabus() {
+            const input = document.getElementById('syllabus-q-input');
+            const question = input.value;
+            if (!question) { return; }
+
+            const chatWindow = document.getElementById('chat-window');
+            
+            const userBubble = document.createElement('div');
+            userBubble.className = 'chat-bubble user-bubble';
+            userBubble.textContent = question;
+            chatWindow.appendChild(userBubble);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+            input.value = '';
+
+            const loaderBubble = document.createElement('div');
+            loaderBubble.className = 'chat-bubble ai-bubble';
+            const loader = document.createElement('div');
+            loader.className = 'loader';
+            loader.style.width = '20px';
+            loader.style.height = '20px';
+            loader.style.margin = '0';
+            loaderBubble.appendChild(loader);
+            chatWindow.appendChild(loaderBubble);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+
+            const prompt = `You are a helpful course assistant for PSY 121-01. Based ONLY on the following syllabus text, answer the user's question. If the answer is not in the syllabus, say 'I cannot find that information in the syllabus.' Here is the syllabus: \n\n${syllabusText}\n\nHere is the user's question: "${question}"`;
+
+            try {
+                const answer = await callGemini(prompt);
+                loaderBubble.innerHTML = answer || "Sorry, I couldn't find an answer in the syllabus.";
+            } catch (error) {
+                console.error("Error asking syllabus:", error);
+                loaderBubble.textContent = `An error occurred. Please try again.`;
+            } finally {
+                 chatWindow.scrollTop = chatWindow.scrollHeight;
+            }
+        }
+
+        async function generateStudyPlan() {
+            const examSelect = document.getElementById('exam-select');
+            const studyTimes = document.getElementById('study-times').value;
+            const planOutput = document.getElementById('plan-output');
+            const planLoader = document.getElementById('plan-loader');
+
+            if (!studyTimes) { return; }
+
+            planOutput.style.display = 'none';
+            planLoader.style.display = 'block';
+
+            const examNumber = examSelect.value;
+            let topics = [];
+            let examDate = '';
+            let examFound = false;
+            let counter = 0;
+
+            for (const item of scheduleData) {
+                 if (!examFound && !item.topic.toLowerCase().includes('exam') && !item.topic.toLowerCase().includes('no class') && !item.topic.toLowerCase().includes('re-take') && item.topic) {
+                    topics.push(item.topic.split(';')[0].trim());
+                }
+
+                if (item.topic.toLowerCase().includes('exam') && !item.topic.toLowerCase().includes('re-take')) {
+                    counter++;
+                    if (counter == examNumber) {
+                        examFound = true;
+                        examDate = item.date;
+                        break; 
+                    }
+                    topics = [];
+                }
+            }
+
+            const prompt = `You are an academic coach. A student is studying for Psychology Exam ${examNumber}, which is on ${examDate}. They need to cover these specific topics: ${topics.join(', ')}. The student is available to study at these times: ${studyTimes}. Create a structured, weekly study plan that breaks down the topics and assigns them to the available study slots, leading up to the exam date. Provide actionable advice and tips for effective studying. Format the output as clean HTML with headings, lists, and bold text for emphasis.`;
+
+            try {
+                const planText = await callGemini(prompt);
+                planOutput.innerHTML = planText || '<p>Sorry, the study plan could not be generated at this time.</p>';
+            } catch (error) {
+                console.error("Error generating study plan:", error);
+                planOutput.innerHTML = `<p>An error occurred. Please try again later. Details: ${error.message}</p>`;
+            } finally {
+                planLoader.style.display = 'none';
+                planOutput.style.display = 'block';
+            }
+        }
+        
+        function exportCalendar() {
+            let icsFile = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//SyllabusApp//PSY121-01//EN
+CALSCALE:GREGORIAN
+`;
+
+            const year = 2025;
+            const classLocation = "Eberhart 250";
+
+            scheduleData.forEach(item => {
+                if (item.topic.toLowerCase().includes('exam') || item.topic.toLowerCase().includes('packback')) {
+                    const dateParts = item.date.split(' ');
+                    const month = dateParts[1].split('/')[0];
+                    const day = dateParts[1].split('/')[1];
+                    
+                    let startDate, endDate;
+                    let summary = `PSY 121: ${item.topic}`;
+                    
+                    if (item.topic.toLowerCase().includes('final')) {
+                        startDate = `${year}${month.padStart(2, '0')}${day.padStart(2, '0')}T080000`;
+                        endDate = `${year}${month.padStart(2, '0')}${day.padStart(2, '0')}T110000`;
+                    } else if (item.topic.toLowerCase().includes('packback')) {
+                         // Due the night before the exam
+                        let examDate = new Date(`${month}/${day}/${year}`);
+                        examDate.setDate(examDate.getDate() - 1);
+                        const dueMonth = (examDate.getMonth() + 1).toString().padStart(2, '0');
+                        const dueDay = examDate.getDate().toString().padStart(2, '0');
+                        startDate = `${year}${dueMonth}${dueDay}T235900`;
+                        endDate = `${year}${dueMonth}${dueDay}T235959`;
+                    }
+                    else {
+                        startDate = `${year}${month.padStart(2, '0')}${day.padStart(2, '0')}T080000`;
+                        endDate = `${year}${month.padStart(2, '0')}${day.padStart(2, '0')}T091500`;
+                    }
+
+                    icsFile += `BEGIN:VEVENT
+DTSTAMP:${new Date().toISOString().replace(/[-:.]/g, '')}Z
+UID:${startDate}-${Math.random().toString(36).substr(2, 9)}@syllabus.app
+DTSTART;TZID=America/New_York:${startDate}
+DTEND;TZID=America/New_York:${endDate}
+SUMMARY:${summary}
+LOCATION:${classLocation}
+END:VEVENT
+`;
+                }
+            });
+
+            icsFile += 'END:VCALENDAR';
+
+            const blob = new Blob([icsFile], { type: 'text/calendar;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'PSY121_Fall2025_Schedule.ics';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        async function generateStudyGroupHelp() {
+            const topic = document.getElementById('group-topic-input').value;
+            if (!topic) { return; }
+            
+            const outputDiv = document.getElementById('group-help-output');
+            const loader = document.getElementById('group-help-loader');
+            outputDiv.style.display = 'none';
+            loader.style.display = 'block';
+
+            const prompt = `You are an academic coach. For the psychology topic "${topic}", generate a helpful guide for a student study group. Include: 1) 3-4 key discussion questions to ensure they understand the core concepts, 2) 1-2 potential points of confusion to watch out for, and 3) a simple 10-minute activity the group can do to reinforce the material. Format as clean HTML.`;
+            
+            try {
+                const helpText = await callGemini(prompt);
+                outputDiv.innerHTML = helpText || '<p>Could not generate study group help at this time.</p>';
+            } catch (error) {
+                console.error("Error generating study group help:", error);
+                outputDiv.innerHTML = `<p>An error occurred.</p>`;
+            } finally {
+                loader.style.display = 'none';
+                outputDiv.style.display = 'block';
+            }
+        }
+        
+        async function generateQuiz() {
+            const examSelect = document.getElementById('quiz-exam-select');
+            const quizOutput = document.getElementById('quiz-output');
+            const quizLoader = document.getElementById('quiz-loader');
+
+            quizOutput.style.display = 'none';
+            quizLoader.style.display = 'block';
+
+            const examNumber = examSelect.value;
+            let topics = [];
+            let examFound = false;
+            let counter = 0;
+
+            for (const item of scheduleData) {
+                if (!examFound && !item.topic.toLowerCase().includes('exam') && !item.topic.toLowerCase().includes('no class') && !item.topic.toLowerCase().includes('re-take') && item.topic) {
+                    topics.push(item.topic.split(';')[0].trim());
+                }
+                if (item.topic.toLowerCase().includes('exam') && !item.topic.toLowerCase().includes('re-take')) {
+                    counter++;
+                    if (counter == examNumber) {
+                        examFound = true;
+                        break;
+                    }
+                    topics = [];
+                }
+            }
+
+            const prompt = `Based on the following psychology topics: ${topics.join(', ')}, generate a 3-question multiple-choice practice quiz. For each question, provide four options (A, B, C, D) and indicate the correct answer.`;
+            
+            const schema = {
+                type: "OBJECT",
+                properties: {
+                    quiz: {
+                        type: "ARRAY",
+                        items: {
+                            type: "OBJECT",
+                            properties: {
+                                question: { type: "STRING" },
+                                options: {
+                                    type: "OBJECT",
+                                    properties: {
+                                        A: { type: "STRING" },
+                                        B: { type: "STRING" },
+                                        C: { type: "STRING" },
+                                        D: { type: "STRING" }
+                                    },
+                                    required: ["A", "B", "C", "D"]
+                                },
+                                answer: { type: "STRING" }
+                            },
+                            required: ["question", "options", "answer"]
+                        }
+                    }
+                },
+                required: ["quiz"]
+            };
+
+            try {
+                const quizData = await callGeminiWithSchema(prompt, schema);
+                if (quizData && quizData.quiz) {
+                    renderQuiz(quizData.quiz);
+                } else {
+                    quizOutput.innerHTML = `<p>Could not generate a valid quiz from the provided topics.</p>`;
+                }
+            } catch (error) {
+                console.error("Error generating quiz:", error);
+                quizOutput.innerHTML = `<p>An error occurred while generating the quiz.</p>`;
+            } finally {
+                quizLoader.style.display = 'none';
+                quizOutput.style.display = 'block';
+            }
+        }
+
+        function renderQuiz(quiz) {
+            const quizOutput = document.getElementById('quiz-output');
+            quizOutput.innerHTML = '';
+            quiz.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'mb-6';
+                questionDiv.innerHTML = `<p class="font-semibold mb-2">${index + 1}. ${q.question}</p>`;
+                
+                const optionsDiv = document.createElement('div');
+                optionsDiv.id = `q${index}-options`;
+                for (const [key, value] of Object.entries(q.options)) {
+                    const optionLabel = document.createElement('label');
+                    optionLabel.className = 'quiz-option';
+                    optionLabel.innerHTML = `<input type="radio" name="q${index}" value="${key}" class="mr-2">${key}: ${value}`;
+                    optionsDiv.appendChild(optionLabel);
+                }
+                questionDiv.appendChild(optionsDiv);
+                
+                const feedbackDiv = document.createElement('div');
+                feedbackDiv.id = `q${index}-feedback`;
+                feedbackDiv.className = 'mt-2 text-sm';
+                questionDiv.appendChild(feedbackDiv);
+
+                quizOutput.appendChild(questionDiv);
+                
+                optionsDiv.addEventListener('change', (e) => {
+                    checkAnswer(index, e.target.value, q.answer);
+                });
+            });
+        }
+
+        function checkAnswer(qIndex, selected, correct) {
+            const options = document.querySelectorAll(`input[name="q${qIndex}"]`);
+            const feedback = document.getElementById(`q${qIndex}-feedback`);
+            
+            options.forEach(opt => {
+                const label = opt.parentElement;
+                label.classList.remove('selected', 'correct', 'incorrect');
+                if (opt.value === correct) {
+                    label.classList.add('correct');
+                }
+                if (opt.checked && opt.value !== correct) {
+                    label.classList.add('incorrect');
+                }
+                opt.disabled = true;
+            });
+
+            if (selected === correct) {
+                feedback.innerHTML = `<p class="text-green-700 font-semibold">Correct!</p>`;
+            } else {
+                feedback.innerHTML = `<p class="text-red-700 font-semibold">Incorrect. The correct answer is ${correct}.</p>`;
+            }
+        }
+
+
+        // Add event listener for 'Enter' key on syllabus input
+        document.getElementById('syllabus-q-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                askSyllabus();
+            }
+        });
+
+
+        // --- Initial Population ---
+        populateSchedule();
+    </script>
+
+</body>
+</html>
+
