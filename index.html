@@ -569,7 +569,7 @@
         }
 
         // --- Gemini API Functions ---
-        const apiKey = "AIzaSyAsZklHtZx7rofa5Gj5ZgcgoBOYRAPg8lw"; // API Key is handled by the environment
+        const apiKey = "AIzaSyAsZklHtZx7rofa5Gj5ZgcgoBOYRAPg8lw"; // PASTE YOUR API KEY HERE
         
         const syllabusText = `
             GENERAL PSYCHOLOGY (PSY 121-01) Fall 2025. TR 8:00 – 9:15AM.
@@ -590,19 +590,16 @@
             - Cumulative Final: The cumulative final is on Tuesday, December 9, 8:00-11:00am. It is not required but it can replace your lowest unit exam grade. If your cumulative final grade ends up being lower than the unit exam grade you were hoping to replace, the cumulative final grade will not be counted.
             - Exam Extra Credit (Re-takes): In the next class meeting after the exam, you can re-take the exam. If your score goes up on the re-take, I will take your re-take percent correct (e.g., 90%), divide it by 10 (e.g., 9), and add it to your original exam score. You can improve your score by a max of 10 points. You must take the initial exam to take the re-take. No re-take for the final exam.
             - Make-up exams: Only for university-approved excused absences with documentation. Must be scheduled within 48 hours and taken within one week.
-            Grading Scale: A: 93-100, A-: 90-92, B+: 87-89, B: 83-86, B-: 80-82, C+: 77-79, C: 73-76, C-: 70-72, D+: 67-69, D: 63-66, D-: 60-62, F: 59 or below.
+            - Grading Scale: A: 93-100, A-: 90-92, B+: 87-89, B: 83-86, B-: 80-82, C+: 77-79, C: 73-76, C-: 70-72, D+: 67-69, D: 63-66, D-: 60-62, F: 59 or below.
+            - Rounding Policy: I round to the nearest 0.5%; so a 92.5% becomes a 93% (A).
         `;
 
         const courseMaterialText = syllabusText;
 
         async function callGemini(prompt) {
-            if (!apiKey && typeof __apiKey === 'undefined') {
-                throw new Error("API key is not configured");
-            }
             const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
             const payload = { contents: chatHistory };
-            const effectiveApiKey = typeof __apiKey !== 'undefined' ? __apiKey : apiKey;
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${effectiveApiKey}`;
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
             
             try {
                 const response = await fetch(apiUrl, {
@@ -621,7 +618,7 @@
                     return result.candidates[0].content.parts[0].text;
                 } else {
                     console.error("Gemini API response is missing expected content:", result);
-                    return null;
+                    return "Sorry, I received an unexpected response from the AI.";
                 }
             } catch (error) {
                 console.error("Error calling Gemini API:", error);
@@ -796,7 +793,7 @@
                 
                 **Grading Rules from Syllabus:**
                 - Exams: 60% of total grade. There are 4 unit exams. The lowest of the 4 is dropped.
-                - Exam Retakes: If a retake is taken, the final score for that exam is calculated as: original_score + (retake_score * 0.1). For example, an 80 on the exam and a 90 on the retake results in a final score of 89. There is no 100% cap on grades.
+                - Exam Retakes: If a retake is taken, the final score for that exam is calculated as: original_score + (retake_score * 0.1).
                 - Optional Final Exam: Can replace the lowest unit exam score if it's higher.
                 - Research Requirement: 15% of total grade.
                 - Discussion Posts: 15% of total grade. The lowest score is dropped.
@@ -825,9 +822,7 @@
                     - **The Calculation:** Provide a step-by-step breakdown of the math. Explain how you're using the weights and dropped scores.
                     - **The Verdict:** Clearly state the final required score in a concluding sentence.
                 3.  Use lists (<ul>, <li>) and bold text (<strong>) to make the calculation easy to follow.
-                4.  If the required score is very high (e.g., over 110%), explain that their goal might be difficult to achieve.
-                5.  If the calculation cannot be performed (e.g., the target assignment grade has already been entered), explain why.
-                6.  Do not include the \`\`\`html wrapper in your response.
+                4.  **VERY IMPORTANT:** The response you provide will be injected directly into the innerHTML of a div on a webpage. Therefore, you MUST return only the raw HTML content (starting with an <h4> tag). Do not wrap your response in Markdown code blocks like \`\`\`html ... \`\`\` or any other formatting.
             `;
 
             try {
